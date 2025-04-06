@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Slideshow do Google Drive</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+      transition: opacity 1s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <img id="slideshow" src="" alt="Slideshow">
+
+  <script>
+    const apiURL = "https://script.google.com/macros/s/AKfycbxHUe83XtrIGoF9_FknzioCp41ujwfdLhZfZEldJdv-Oi7VJsLNRKBrqoGh4XoUU3GuHQ/exec";
+
+    fetch(apiURL)
+      .then(response => response.json())
+      .then(imagens => {
+        if (imagens.length === 0) {
+          alert("Nenhuma imagem encontrada!");
+          return;
+        }
+
+        let index = 0;
+        const img = document.getElementById("slideshow");
+
+        function mostrarProximaImagem() {
+          img.style.opacity = 0;
+          setTimeout(() => {
+            img.src = imagens[index];
+            img.style.opacity = 1;
+            index = (index + 1) % imagens.length;
+          }, 500);
+        }
+
+        mostrarProximaImagem();
+        setInterval(mostrarProximaImagem, 4000);
+      })
+      .catch(error => {
+        console.error("Erro ao carregar imagens:", error);
+        alert("Erro ao carregar imagens.");
+      });
+  </script>
+</body>
+</html>
