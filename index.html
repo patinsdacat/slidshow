@@ -26,8 +26,8 @@
   </style>
 </head>
 <body>
-  <img id="slideshow" src="" class="active" alt="Slideshow">
-  
+  <img id="slideshow" src="" alt="Slideshow" />
+
   <script>
     const apiURL = "https://script.google.com/macros/s/AKfycbxHUe83XtrIGoF9_FknzioCp41ujwfdLhZfZEldJdv-Oi7VJsLNRKBrqoGh4XoUU3GuHQ/exec";
 
@@ -38,4 +38,32 @@
     async function startSlideshow() {
       try {
         const response = await fetch(apiURL);
-        images
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          imgElement.alt = "Nenhuma imagem encontrada.";
+          return;
+        }
+
+        images = data;
+        showImage();
+        setInterval(showImage, 3000); // Troca a imagem a cada 3 segundos
+      } catch (error) {
+        console.error("Erro ao carregar imagens:", error);
+        imgElement.alt = "Erro ao carregar imagens.";
+      }
+    }
+
+    function showImage() {
+      imgElement.classList.remove("active");
+      setTimeout(() => {
+        imgElement.src = images[current];
+        imgElement.classList.add("active");
+        current = (current + 1) % images.length;
+      }, 500);
+    }
+
+    startSlideshow();
+  </script>
+</body>
+</html>
